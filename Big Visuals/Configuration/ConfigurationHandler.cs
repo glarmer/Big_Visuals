@@ -45,7 +45,7 @@ public class ConfigurationHandler
         ConfigRenderScale = Bind(
             "Scaling",
             "RenderScale",
-            1f,
+            1.4f,
             "Controls the render scale of the game. Native is 1.0 (100%). Range 0.1-2.0",
             () => Plugin.Instance.Settings.SetResolutionScale(),
             v => Mathf.Clamp(v, 0.1f, 2f)
@@ -55,7 +55,7 @@ public class ConfigurationHandler
             "Scaling",
             "UpscalingFilter",
             1,
-            "Controls what filter the game uses to scale to your monitor resolution. 0 = auto, 1 = linear, 2 = point, 3 = FSR 1.0, 4 = STP",
+            "Controls what filter the game uses to scale to your monitor resolution. 0 = auto, 1 = linear, 2 = point, 3 = FSR 1.0",
             () => Plugin.Instance.Settings.SetUpscaler(),
             v => Mathf.Clamp(v, 0, 4)
         );
@@ -63,8 +63,8 @@ public class ConfigurationHandler
         ConfigLODQuality = Bind(
             "LOD",
             "LODQuality",
-            2.5f,
-            "Controls the LOD bias of the game. PEAK's High equates to 1.0. Higher values increase detail distance. Range 0.1-10",
+            4f,
+            "Controls the LOD bias of the game. Higher values increase detail distance. Range 0.1-10",
             () => Plugin.Instance.Settings.SetLODQuality(),
             v => Mathf.Clamp(v, 0.1f, 10f)
         );
@@ -82,7 +82,7 @@ public class ConfigurationHandler
             "Shadows",
             "ShadowCascades",
             4,
-            "Controls the number of shadow cascades used by the directional light. PEAK's High option equates to 2. Higher values improve shadow stability. Range 1-10",
+            "Controls the number of shadow cascades used by the directional light. Higher values improve shadow stability. Range 1-4",
             () => Plugin.Instance.Settings.SetShadowCascades(),
             ClampShadowCascades
         );
@@ -90,7 +90,7 @@ public class ConfigurationHandler
         ConfigShadowmapResolution = Bind(
             "Shadows",
             "ShadowmapResolution",
-            4096,
+            8192,
             "Controls the quality of the shadows, can reduce performance so turn it down if you're having issues. Makes the trees less wobbly",
             () => Plugin.Instance.Settings.SetShadowmapResolution(),
             ClampShadowmapResolution
@@ -115,8 +115,8 @@ public class ConfigurationHandler
         ConfigCameraAA = Bind(
             "AntiAliasing",
             "CameraAA",
-            2,
-            "Controls what type of AA the Camera uses. By default PEAK uses Temporal Antialiasing (TAA). All of these options are essentially clever blur filters and sometimes people find them unpleasant. 0 = None, 1 = FXAA, 2 = SMAA, 3 = TAA.",
+            0,
+            "Controls what type of AA the Camera uses. All of these options are essentially clever blur filters and sometimes people find them unpleasant. 0 = None, 1 = FXAA, 2 = SMAA, 3 = TAA.",
             () => Plugin.Instance.Settings.SetPostProcessAA(),
             v => Mathf.Clamp(v, 0, 3)
         );
@@ -133,8 +133,8 @@ public class ConfigurationHandler
         ConfigFOV = Bind(
             "Camera",
             "FOV",
-            120,
-            "Controls the camera field of view. Range 60-150.",
+            90,
+            "Controls the camera field of view. Range 60-150. Will override the option in the game's menu.",
             () => Plugin.Instance.Settings.SetFOV(),
             v => Mathf.Clamp(v, 60, 150)
         );
