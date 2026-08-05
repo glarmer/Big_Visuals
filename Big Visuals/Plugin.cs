@@ -56,13 +56,13 @@ public class Plugin : BasePlugin
                     2 => "Nearest Neighbor",
                     3 => "FSR 1.0",
                     4 => "STP",
-                    _ => "???"
+                    _ => "Invalid Value"
                 }
             ),
             Option.Bool("Anisotropic Filtering", ConfigurationHandler.ConfigAnisotropicFiltering),
             Option.Float("LOD Quality", ConfigurationHandler.ConfigLODQuality, 0.1f, 10f, 0.1f),
-            Option.Int("Shadowmap Resolution", ConfigurationHandler.ConfigShadowmapResolution, 0, 10240, 1024),
-            Option.Int("Shadow Distance", ConfigurationHandler.ConfigShadowDistance, 0, 1000, 25),
+            Option.Int("Shadowmap Resolution", ConfigurationHandler.ConfigShadowmapResolution, 1024, 8192, 1024),
+            //Option.Int("Shadow Distance", ConfigurationHandler.ConfigShadowDistance, 0, 1000, 25),
             Option.Int("Shadow Cascades", ConfigurationHandler.ConfigShadowCascades, 1, 10),
             Option.Bool("Soft Shadows", ConfigurationHandler.ConfigSoftShadows),
             Option.Int(
@@ -98,44 +98,5 @@ public class Plugin : BasePlugin
         GameObject bigVisualsObject = new GameObject("BigVisuals");
         bigVisualsObject.AddComponent<CameraWatcher>();
         UnityEngine.Object.DontDestroyOnLoad(bigVisualsObject);
-    }
-    
-    private void HarmonyPatches()
-    {
-        // TryPatch(
-        //     AccessTools.Method(typeof(PlayerCameraMinder), nameof(PlayerCameraMinder.baseFieldOfView), Type.EmptyTypes),
-        //     null,
-        //     AccessTools.Method(typeof(PlayerCameraMinderPatches), nameof(PlayerCameraMinderPatches.PostFix)),
-        //     nameof(PlayerCameraMinderPatches.PostFix)
-        // );
-    }
-    
-    private void TryPatch(MethodInfo original, MethodInfo prefix, MethodInfo postfix, string patchName)
-    {
-        if (original == null)
-        {
-            Log.LogError("Failed to find patch target: " + patchName);
-            return;
-        }
-
-        try
-        {
-            _harmony.Patch(original, 
-                prefix == null ? null : new HarmonyMethod(prefix), 
-                postfix == null ? null : new HarmonyMethod(postfix)
-            );
-
-            var patchInfo = Harmony.GetPatchInfo(original);
-            var prefixCount = patchInfo?.Prefixes?.Count ?? 0;
-            var postfixCount = patchInfo?.Postfixes?.Count ?? 0;
-
-            Log.LogInfo(
-                "Installed patch for " + patchName + " prefixes=" + prefixCount + " postfixes=" + postfixCount
-            );
-        }
-        catch (Exception ex)
-        {
-            Log.LogError("Failed to apply the patch for " + patchName + ": " + ex);
-        }
     }
 }

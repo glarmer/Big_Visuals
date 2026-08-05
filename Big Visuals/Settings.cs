@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Reflection;
 using Big_Visuals.Configuration;
 using UnityEngine;
@@ -8,6 +10,9 @@ namespace Big_Visuals;
 
 public class Settings
 {
+    private static readonly BindingFlags PipelineMemberFlags =
+        BindingFlags.Instance | BindingFlags.Public | BindingFlags.NonPublic;
+
     private ConfigurationHandler _configurationHandler = Plugin.Instance.ConfigurationHandler;
     
     public void SetAllSettings()
@@ -15,7 +20,7 @@ public class Settings
         SetResolutionScale();
         SetUpscaler();
         SetLODQuality();
-        SetShadowDistance();
+        //SetShadowDistance();
         SetShadowCascades();
         SetAnisotropicFiltering();
         SetSoftShadows();
@@ -31,22 +36,28 @@ public class Settings
 
     public void SetSoftShadows()
     {
-        if (GraphicsSettings.currentRenderPipeline is UniversalRenderPipelineAsset pipeline)
-        {
-            var flags = BindingFlags.NonPublic | BindingFlags.Instance;
-            var softShadowsField = pipeline.GetType().GetField("m_SoftShadowsSupported", flags);
-            softShadowsField.SetValue(pipeline, _configurationHandler.SoftShadows);
-            Plugin.Log.LogInfo("Soft Shadows applied: " + _configurationHandler.ShadowmapResolution);
-        }
+        ApplyToRenderPipelines(
+            "Soft Shadows",
+            pipeline =>
+            {
+                SetPipelineMember(pipeline, "supportsSoftShadows", _configurationHandler.SoftShadows);
+                SetPipelineMember(pipeline, "m_SoftShadowsSupported", _configurationHandler.SoftShadows);
+            },
+            pipeline => pipeline.supportsSoftShadows.ToString()
+        );
     }
 
     public void SetShadowmapResolution()
     {
-        if (GraphicsSettings.currentRenderPipeline is UniversalRenderPipelineAsset pipeline)
-        {
-            pipeline.mainLightShadowmapResolution = _configurationHandler.ShadowmapResolution;
-            Plugin.Log.LogInfo("Shadowmap Resolution applied: " + _configurationHandler.ShadowmapResolution);
-        }
+        ApplyToRenderPipelines(
+            "Shadowmap Resolution",
+            pipeline =>
+            {
+                pipeline.mainLightShadowmapResolution = _configurationHandler.ShadowmapResolution;
+                SetPipelineMember(pipeline, "m_MainLightShadowmapResolution", (UnityEngine.Rendering.Universal.ShadowResolution)_configurationHandler.ShadowmapResolution);
+            },
+            pipeline => pipeline.mainLightShadowmapResolution.ToString()
+        );
     }
 
     public void SetAnisotropicFiltering()
@@ -66,11 +77,17 @@ public class Settings
 
     public void SetMSAA()
     {
-        if (GraphicsSettings.currentRenderPipeline is UniversalRenderPipelineAsset pipeline)
-        {
-            pipeline.msaaSampleCount = Plugin.Instance.ConfigurationHandler.MSAA;
-        }
-        Plugin.Log.LogInfo("MSAA applied: " + _configurationHandler.MSAA);
+        int sampleCount = _configurationHandler.MSAA == 0 ? 1 : _configurationHandler.MSAA;
+
+        ApplyToRenderPipelines(
+            "MSAA",
+            pipeline =>
+            {
+                pipeline.msaaSampleCount = sampleCount;
+                SetPipelineMember(pipeline, "m_MSAA", (MsaaQuality)sampleCount);
+            },
+            pipeline => pipeline.msaaSampleCount.ToString()
+        );
     }
 
     public void SetFOV()
@@ -81,18 +98,28 @@ public class Settings
 
     public void SetResolutionScale()
     {
-        if (!(GraphicsSettings.currentRenderPipeline is UniversalRenderPipelineAsset currentRenderPipeline))
-            return;
-        currentRenderPipeline.renderScale = _configurationHandler.RenderScale;
-        Plugin.Log.LogInfo("Render Scale applied: " + _configurationHandler.RenderScale);
+        ApplyToRenderPipelines(
+            "Render Scale",
+            pipeline =>
+            {
+                pipeline.renderScale = _configurationHandler.RenderScale;
+                SetPipelineMember(pipeline, "m_RenderScale", _configurationHandler.RenderScale);
+            },
+            pipeline => pipeline.renderScale.ToString("F3")
+        );
     }
 
     public void SetUpscaler()
     {
-        if (!(GraphicsSettings.currentRenderPipeline is UniversalRenderPipelineAsset currentRenderPipeline))
-            return;
-        currentRenderPipeline.upscalingFilter = (UpscalingFilterSelection) _configurationHandler.UpscalingFilter;
-        Plugin.Log.LogInfo("Upscaling Filter applied: " + _configurationHandler.UpscalingFilter);
+        ApplyToRenderPipelines(
+            "Upscaling Filter",
+            pipeline =>
+            {
+                pipeline.upscalingFilter = (UpscalingFilterSelection)_configurationHandler.UpscalingFilter;
+                SetPipelineMember(pipeline, "m_UpscalingFilter", (UpscalingFilterSelection)_configurationHandler.UpscalingFilter);
+            },
+            pipeline => pipeline.upscalingFilter.ToString()
+        );
     }
 
     public void SetLODQuality()
@@ -103,20 +130,70 @@ public class Settings
 
     public void SetShadowDistance()
     {
-        if (GraphicsSettings.currentRenderPipeline is UniversalRenderPipelineAsset pipeline)
-        {
-            pipeline.shadowDistance = _configurationHandler.ShadowDistance;
-            Plugin.Log.LogInfo("Shadow Distance applied: " + _configurationHandler.ShadowDistance);
-        }
+        ApplyToRenderPipelines(
+            "Shadow Distance",
+            pipeline =>
+            {
+                pipeline.shadowDistance = _configurationHandler.ShadowDistance;
+                SetPipelineMember(pipeline, "m_ShadowDistance", (float)_configurationHandler.ShadowDistance);
+            },
+            pipeline => pipeline.shadowDistance.ToString("F1")
+        );
     }
 
     public void SetShadowCascades()
     {
-        if (GraphicsSettings.currentRenderPipeline is UniversalRenderPipelineAsset pipeline)
-        {
-            pipeline.shadowCascadeCount = _configurationHandler.ShadowCascades;
-            Plugin.Log.LogInfo("Shadow Cascades applied: " + _configurationHandler.ShadowCascades);
-        }
+        ApplyToRenderPipelines(
+            "Shadow Cascades",
+            pipeline =>
+            {
+                pipeline.shadowCascadeCount = _configurationHandler.ShadowCascades;
+                SetPipelineMember(pipeline, "m_ShadowCascadeCount", _configurationHandler.ShadowCascades);
+                SetPipelineMember(pipeline, "m_ShadowCascades", GetShadowCascadeOption(_configurationHandler.ShadowCascades));
+            },
+            pipeline => pipeline.shadowCascadeCount.ToString()
+        );
     }
-    
+
+    private void ApplyToRenderPipelines(string settingName, Action<UniversalRenderPipelineAsset> apply, Func<UniversalRenderPipelineAsset, string> readBack)
+    {
+        List<UniversalRenderPipelineAsset> pipelines = new List<UniversalRenderPipelineAsset>();
+        
+        foreach (UniversalRenderPipelineAsset pipeline in Resources.FindObjectsOfTypeAll<UniversalRenderPipelineAsset>())
+            pipelines.Add(pipeline);
+        
+        if (pipelines.Count == 0)
+        {
+            Plugin.Log.LogWarning($"{settingName} not applied: no UniversalRenderPipelineAsset is active or loaded");
+            return;
+        }
+
+        foreach (UniversalRenderPipelineAsset pipeline in pipelines)
+            apply(pipeline);
+
+        Plugin.Log.LogInfo($"{settingName} applied to {pipelines.Count} URP asset(s), active value: {readBack(pipelines[0])}");
+    }
+
+    private static void SetPipelineMember(UniversalRenderPipelineAsset pipeline, string memberName, object value)
+    {
+        var property = pipeline.GetType().GetProperty(memberName, PipelineMemberFlags);
+        if (property != null && property.CanWrite)
+        {
+            property.SetValue(pipeline, value);
+            return;
+        }
+
+        var field = pipeline.GetType().GetField(memberName, PipelineMemberFlags);
+        if (field != null)
+            field.SetValue(pipeline, value);
+    }
+
+    private static ShadowCascadesOption GetShadowCascadeOption(int cascadeCount)
+    {
+        if (cascadeCount <= 1)
+            return ShadowCascadesOption.NoCascades;
+        if (cascadeCount <= 2)
+            return ShadowCascadesOption.TwoCascades;
+        return ShadowCascadesOption.FourCascades;
+    }
 }
