@@ -1,8 +1,8 @@
 # Big Visuals
 
-Do you wish you could make BIG WALK look even more ... *big*? Well have I got the solution for you <br>
+Do you wish you could make Big Walk look even more ... *big*? Well have I got the solution for you <br>
 
-Introducing, **"Big Visuals"**, a client-side mod for BIG WALK which unlocks better graphics options for BIG WALK!
+Introducing, **"Big Visuals"**, a client-side mod for Big Walk which unlocks better graphics options for BIG WALK!
 
 [![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/Q5Q7IFRUH)
 
