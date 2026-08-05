@@ -320,16 +320,57 @@ public class ModConfigurationUI : MonoBehaviour
         var option = _options[_selectedIndex];
         if (option.IsDisabled()) return;
 
-        if (option.Type == Option.OptionType.Int)
+        if (option.Type == Option.OptionType.Bool)
         {
-            int newValue = Mathf.Clamp(option.IntEntry.Value + (delta * option.Step), option.MinInt, option.MaxInt);
-            option.IntEntry.Value = newValue;
+            option.BoolEntry.Value = delta > 0;
+        }
+        else if (option.Type == Option.OptionType.Int)
+        {
+            AdjustInt(option, delta);
         }
         else if (option.Type == Option.OptionType.Float)
         {
-            float newValue =
-                Mathf.Clamp(option.FloatEntry.Value + (delta * option.FloatStep), option.MinFloat, option.MaxFloat);
-            option.FloatEntry.Value = newValue;
+            AdjustFloat(option, delta);
+        }
+    }
+
+    private static void AdjustInt(Option option, int delta)
+    {
+        int oldValue = option.IntEntry.Value;
+        int candidate = oldValue;
+        int attempts = Mathf.Max(1, Mathf.CeilToInt((option.MaxInt - option.MinInt) / (float)option.Step) + 1);
+
+        for (int i = 0; i < attempts; i++)
+        {
+            int nextValue = Mathf.Clamp(candidate + (delta * option.Step), option.MinInt, option.MaxInt);
+            if (nextValue == candidate)
+                return;
+
+            option.IntEntry.Value = nextValue;
+            if (option.IntEntry.Value != oldValue)
+                return;
+
+            candidate = nextValue;
+        }
+    }
+
+    private static void AdjustFloat(Option option, int delta)
+    {
+        float oldValue = option.FloatEntry.Value;
+        float candidate = oldValue;
+        int attempts = Mathf.Max(1, Mathf.CeilToInt((option.MaxFloat - option.MinFloat) / option.FloatStep) + 1);
+
+        for (int i = 0; i < attempts; i++)
+        {
+            float nextValue = Mathf.Clamp(candidate + (delta * option.FloatStep), option.MinFloat, option.MaxFloat);
+            if (Mathf.Approximately(nextValue, candidate))
+                return;
+
+            option.FloatEntry.Value = nextValue;
+            if (!Mathf.Approximately(option.FloatEntry.Value, oldValue))
+                return;
+
+            candidate = nextValue;
         }
     }
 
