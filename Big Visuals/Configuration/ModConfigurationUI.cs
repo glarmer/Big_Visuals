@@ -104,17 +104,17 @@ public class ModConfigurationUI : MonoBehaviour
 
         _options = new List<Option>
         {
+            Option.Int("FOV", configurationHandler.ConfigFOV, 60, 150),
             Option.Float("Render Scale", configurationHandler.ConfigRenderScale, 0.1f, 2f, 0.1f),
             Option.Int(
                 "Upscaling Filter",
-                configurationHandler.ConfigUpscalingFilter, 0, 4,
+                configurationHandler.ConfigUpscalingFilter, 0, 3,
                 displayValue: () => configurationHandler.ConfigUpscalingFilter.Value switch
                 {
                     0 => "Auto",
                     1 => "Linear",
                     2 => "Nearest Neighbor",
                     3 => "FSR 1.0",
-                    4 => "STP",
                     _ => "Invalid Value"
                 }
             ),
@@ -136,19 +136,18 @@ public class ModConfigurationUI : MonoBehaviour
                     _ => "???"
                 }
             ),
-            Option.Int(
-                "MSAA",
-                configurationHandler.ConfigMSAA, 0, 8, 2,
-                displayValue: () => configurationHandler.ConfigMSAA.Value switch
-                {
-                    0 => "Off",
-                    2 => "2x",
-                    4 => "4x",
-                    8 => "8x",
-                    _ => configurationHandler.ConfigMSAA.Value + "x"
-                }
-            ),
-            Option.Int("FOV", configurationHandler.ConfigFOV, 60, 150),
+            // Option.Int(
+            //     "MSAA",
+            //     configurationHandler.ConfigMSAA, 0, 8, 2,
+            //     displayValue: () => configurationHandler.ConfigMSAA.Value switch
+            //     {
+            //         0 => "Off",
+            //         2 => "2x",
+            //         4 => "4x",
+            //         8 => "8x",
+            //         _ => configurationHandler.ConfigMSAA.Value + "x"
+            //     }
+            // ),
             Option.InputAction("Menu Key", configurationHandler.ConfigMenuKey)
         };
         _selectedIndex = 0;

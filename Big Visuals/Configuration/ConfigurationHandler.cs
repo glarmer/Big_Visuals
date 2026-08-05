@@ -15,25 +15,25 @@ public class ConfigurationHandler
     public ConfigEntry<int> ConfigUpscalingFilter;
     public ConfigEntry<float> ConfigLODQuality;
     public ConfigEntry<string> ConfigMenuKey;
-    public ConfigEntry<int> ConfigShadowDistance;
+    // public ConfigEntry<int> ConfigShadowDistance;
     public ConfigEntry<int> ConfigShadowCascades;
     public ConfigEntry<int> ConfigShadowmapResolution;
     public ConfigEntry<bool> ConfigSoftShadows;
     public ConfigEntry<bool> ConfigAnisotropicFiltering;
     public ConfigEntry<int> ConfigCameraAA;
-    public ConfigEntry<int> ConfigMSAA;
+    // public ConfigEntry<int> ConfigMSAA;
     public ConfigEntry<int> ConfigFOV;
 
     public float RenderScale => ConfigRenderScale.Value;
     public int UpscalingFilter => ConfigUpscalingFilter.Value;
     public float LodQuality => ConfigLODQuality.Value;
-    public int ShadowDistance => ConfigShadowDistance.Value;
+    // public int ShadowDistance => ConfigShadowDistance.Value;
     public int ShadowCascades => ConfigShadowCascades.Value;
     public int ShadowmapResolution => ConfigShadowmapResolution.Value;
     public bool SoftShadows => ConfigSoftShadows.Value;
     public bool AnisotropicFiltering => ConfigAnisotropicFiltering.Value;
     public int CameraAA => ConfigCameraAA.Value;
-    public int MSAA => ConfigMSAA.Value;
+    // public int MSAA => ConfigMSAA.Value;
     public int FOV => ConfigFOV.Value;
 
     public ConfigurationHandler(ConfigFile configFile)
@@ -69,14 +69,14 @@ public class ConfigurationHandler
             v => Mathf.Clamp(v, 0.1f, 10f)
         );
 
-        ConfigShadowDistance = Bind(
-            "Shadows",
-            "ShadowDistance",
-            300,
-            "Controls the maximum distance shadows are rendered. PEAK's High option equates to 200. Higher values improve distant shadows but reduce performance. Range 0-1000",
-            () => Plugin.Instance.Settings.SetShadowDistance(),
-            v => Mathf.Clamp(v, 0, 1000)
-        );
+        // ConfigShadowDistance = Bind(
+        //     "Shadows",
+        //     "ShadowDistance",
+        //     300,
+        //     "Controls the maximum distance shadows are rendered. PEAK's High option equates to 200. Higher values improve distant shadows but reduce performance. Range 0-1000",
+        //     () => Plugin.Instance.Settings.SetShadowDistance(),
+        //     v => Mathf.Clamp(v, 0, 1000)
+        // );
 
         ConfigShadowCascades = Bind(
             "Shadows",
@@ -121,14 +121,14 @@ public class ConfigurationHandler
             v => Mathf.Clamp(v, 0, 3)
         );
 
-        ConfigMSAA = Bind(
-            "AntiAliasing",
-            "MSAA",
-            8,
-            "Controls whether Multi-Sample Anti-Aliasing (MSAA) is enabled. MSAA smooths jagged edges on geometry by sampling pixels multiple times. It is generally sharper than post-process AA methods but only affects object edges and can slightly reduce performance. PEAK does not use it by default. Higher values = better quality but worse performance. Valid values = 0, 2, 4, 8.",
-            () => Plugin.Instance.Settings.SetMSAA(),
-            ClampMsaa
-        );
+        // ConfigMSAA = Bind(
+        //     "AntiAliasing",
+        //     "MSAA",
+        //     8,
+        //     "Controls whether Multi-Sample Anti-Aliasing (MSAA) is enabled. MSAA smooths jagged edges on geometry by sampling pixels multiple times. It is generally sharper than post-process AA methods but only affects object edges and can slightly reduce performance. PEAK does not use it by default. Higher values = better quality but worse performance. Valid values = 0, 2, 4, 8.",
+        //     () => Plugin.Instance.Settings.SetMSAA(),
+        //     ClampMsaa
+        // );
 
         ConfigFOV = Bind(
             "Camera",

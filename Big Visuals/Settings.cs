@@ -30,7 +30,7 @@ public class Settings
     public void SetAllCameraSettings()
     {
         SetPostProcessAA();
-        SetMSAA();
+        // SetMSAA();
         SetFOV();
     }
 
@@ -75,20 +75,20 @@ public class Settings
         Plugin.Log.LogInfo("Camera AA applied: " + _configurationHandler.CameraAA);
     }
 
-    public void SetMSAA()
-    {
-        int sampleCount = _configurationHandler.MSAA == 0 ? 1 : _configurationHandler.MSAA;
-
-        ApplyToRenderPipelines(
-            "MSAA",
-            pipeline =>
-            {
-                pipeline.msaaSampleCount = sampleCount;
-                SetPipelineMember(pipeline, "m_MSAA", (MsaaQuality)sampleCount);
-            },
-            pipeline => pipeline.msaaSampleCount.ToString()
-        );
-    }
+    // public void SetMSAA()
+    // {
+    //     int sampleCount = _configurationHandler.MSAA == 0 ? 1 : _configurationHandler.MSAA;
+    //
+    //     ApplyToRenderPipelines(
+    //         "MSAA",
+    //         pipeline =>
+    //         {
+    //             pipeline.msaaSampleCount = sampleCount;
+    //             SetPipelineMember(pipeline, "m_MSAA", (MsaaQuality)sampleCount);
+    //         },
+    //         pipeline => pipeline.msaaSampleCount.ToString()
+    //     );
+    // }
 
     public void SetFOV()
     {
@@ -128,18 +128,18 @@ public class Settings
         Plugin.Log.LogInfo("LOD Bias applied: " + _configurationHandler.LodQuality);
     }
 
-    public void SetShadowDistance()
-    {
-        ApplyToRenderPipelines(
-            "Shadow Distance",
-            pipeline =>
-            {
-                pipeline.shadowDistance = _configurationHandler.ShadowDistance;
-                SetPipelineMember(pipeline, "m_ShadowDistance", (float)_configurationHandler.ShadowDistance);
-            },
-            pipeline => pipeline.shadowDistance.ToString("F1")
-        );
-    }
+    // public void SetShadowDistance()
+    // {
+    //     ApplyToRenderPipelines(
+    //         "Shadow Distance",
+    //         pipeline =>
+    //         {
+    //             pipeline.shadowDistance = _configurationHandler.ShadowDistance;
+    //             SetPipelineMember(pipeline, "m_ShadowDistance", (float)_configurationHandler.ShadowDistance);
+    //         },
+    //         pipeline => pipeline.shadowDistance.ToString("F1")
+    //     );
+    // }
 
     public void SetShadowCascades()
     {
