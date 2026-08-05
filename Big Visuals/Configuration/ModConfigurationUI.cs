@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using PEAK_Visuals.Configuration;
 using Rewired;
 using UnityEngine;
 using UnityEngine.Rendering;

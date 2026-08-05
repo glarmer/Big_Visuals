@@ -1,11 +1,10 @@
 using System.Reflection;
-using Big_Visuals;
-using PEAK_Visuals.Configuration;
+using Big_Visuals.Configuration;
 using UnityEngine;
 using UnityEngine.Rendering;
 using UnityEngine.Rendering.Universal;
 
-namespace PEAK_Visuals;
+namespace Big_Visuals;
 
 public class Settings
 {

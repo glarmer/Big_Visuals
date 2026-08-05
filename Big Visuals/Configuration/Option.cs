@@ -1,7 +1,7 @@
 using System;
 using BepInEx.Configuration;
 
-namespace PEAK_Visuals.Configuration;
+namespace Big_Visuals.Configuration;
 
 public class Option
 {

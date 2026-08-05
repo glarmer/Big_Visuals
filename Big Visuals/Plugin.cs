@@ -7,12 +7,7 @@ using BepInEx.Unity.IL2CPP;
 using Big_Visuals.Configuration;
 using HarmonyLib;
 using Il2CppInterop.Runtime.Injection;
-using PEAK_Visuals;
-using PEAK_Visuals.Configuration;
 using UnityEngine;
-using Logger = BepInEx.Logging.Logger;
-using Object = System.Object;
-
 
 namespace Big_Visuals;
 

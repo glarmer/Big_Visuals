@@ -1,11 +1,9 @@
 using System;
 using System.Reflection;
 using BepInEx.Configuration;
-using Big_Visuals;
-using Rewired;
 using UnityEngine;
 
-namespace PEAK_Visuals.Configuration;
+namespace Big_Visuals.Configuration;
 
 public class ConfigurationHandler
 {

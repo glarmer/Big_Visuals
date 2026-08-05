@@ -1,7 +1,6 @@
-using Big_Visuals;
 using HarmonyLib;
 
-namespace PEAK_Visuals.Patches;
+namespace Big_Visuals.Patches;
 
 public static class SettingsHandlerPatches
 {
