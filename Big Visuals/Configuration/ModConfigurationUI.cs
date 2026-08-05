@@ -98,13 +98,63 @@ public class ModConfigurationUI : MonoBehaviour
         CalculatePanelWidth();
     }
 
-    public void Init(List<Option> options)
+    public void Init()
     {
-        _options = options ?? new List<Option>();
+        var configurationHandler = Plugin.Instance.ConfigurationHandler;
+
+        _options = new List<Option>
+        {
+            Option.Float("Render Scale", configurationHandler.ConfigRenderScale, 0.1f, 2f, 0.1f),
+            Option.Int(
+                "Upscaling Filter",
+                configurationHandler.ConfigUpscalingFilter, 0, 4,
+                displayValue: () => configurationHandler.ConfigUpscalingFilter.Value switch
+                {
+                    0 => "Auto",
+                    1 => "Linear",
+                    2 => "Nearest Neighbor",
+                    3 => "FSR 1.0",
+                    4 => "STP",
+                    _ => "Invalid Value"
+                }
+            ),
+            Option.Bool("Anisotropic Filtering", configurationHandler.ConfigAnisotropicFiltering),
+            Option.Float("LOD Quality", configurationHandler.ConfigLODQuality, 0.1f, 10f, 0.1f),
+            Option.Int("Shadowmap Resolution", configurationHandler.ConfigShadowmapResolution, 1024, 8192, 1024),
+            //Option.Int("Shadow Distance", configurationHandler.ConfigShadowDistance, 0, 1000, 25),
+            Option.Int("Shadow Cascades", configurationHandler.ConfigShadowCascades, 1, 10),
+            Option.Bool("Soft Shadows", configurationHandler.ConfigSoftShadows),
+            Option.Int(
+                "Camera Antialiasing",
+                configurationHandler.ConfigCameraAA, 0, 3,
+                displayValue: () => configurationHandler.ConfigCameraAA.Value switch
+                {
+                    0 => "None",
+                    1 => "FXAA",
+                    2 => "SMAA",
+                    3 => "TAA",
+                    _ => "???"
+                }
+            ),
+            Option.Int(
+                "MSAA",
+                configurationHandler.ConfigMSAA, 0, 8, 2,
+                displayValue: () => configurationHandler.ConfigMSAA.Value switch
+                {
+                    0 => "Off",
+                    2 => "2x",
+                    4 => "4x",
+                    8 => "8x",
+                    _ => configurationHandler.ConfigMSAA.Value + "x"
+                }
+            ),
+            Option.Int("FOV", configurationHandler.ConfigFOV, 60, 150),
+            Option.InputAction("Menu Key", configurationHandler.ConfigMenuKey)
+        };
         _selectedIndex = 0;
 
         hintText =
-            $"{Plugin.Instance.ConfigurationHandler.ConfigMenuKey.Value.Split("/")[^1].ToUpper()}: Open/Close • Tab or ↑/↓: Move • Enter/Click: Change • Scroll Wheel or ←/→ Arrows: Adjust Numerical Values • +/-: Scale Menu";
+            $"{configurationHandler.ConfigMenuKey.Value.Split("/")[^1].ToUpper()}: Open/Close • Tab or ↑/↓: Move • Enter/Click: Change • Scroll Wheel or ←/→ Arrows: Adjust Numerical Values • +/-: Scale Menu";
     }
 
     private void EnsureStyles()
