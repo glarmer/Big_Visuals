@@ -8,6 +8,8 @@ namespace Big_Visuals.Configuration;
 
 public class ModConfigurationUI : MonoBehaviour
 {
+    private const int MouseWheelAxis = 2;
+
     private List<Option> _options;
     private bool _visible;
     private int _selectedIndex;
@@ -225,7 +227,7 @@ public class ModConfigurationUI : MonoBehaviour
         if (_keyboard.GetKeyDown(KeyCode.RightArrow))
             AdjustNumerical(1);
         
-        float scroll = _mouse.GetAxis(1);
+        float scroll = _mouse.GetAxis(MouseWheelAxis);
 
         if (scroll > 0)
             AdjustNumerical(1);
