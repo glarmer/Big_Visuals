@@ -31,8 +31,7 @@ public class Plugin : BasePlugin
         }
         
         ClassInjector.RegisterTypeInIl2Cpp<ModConfigurationUI>();
-        ClassInjector.RegisterTypeInIl2Cpp<CameraWatcher>();
-        
+        ClassInjector.RegisterTypeInIl2Cpp<SettingsRetry>();
 
         ConfigurationHandler = new ConfigurationHandler(Config);
         Settings = new Settings();
@@ -43,11 +42,11 @@ public class Plugin : BasePlugin
         UnityEngine.Object.DontDestroyOnLoad(go);
         _ui = go.AddComponent<ModConfigurationUI>();
         _ui.Init();
-        
+
+        var cameraSettingsRetry = go.AddComponent<SettingsRetry>();
+        cameraSettingsRetry.enabled = false;
+        SettingsRetry.SetInstance(cameraSettingsRetry);
+
         Log.LogInfo($"Plugin {MyPluginInfo.PLUGIN_NAME} is loaded!");
-        
-        GameObject bigVisualsObject = new GameObject("BigVisuals");
-        bigVisualsObject.AddComponent<CameraWatcher>();
-        UnityEngine.Object.DontDestroyOnLoad(bigVisualsObject);
     }
 }

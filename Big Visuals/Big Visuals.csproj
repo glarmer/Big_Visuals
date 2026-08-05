@@ -18,11 +18,12 @@
     
     <ItemGroup>
         <PackageReference Include="BepInEx.Unity.IL2CPP" Version="6.0.0-be.*" IncludeAssets="compile"/>
+        <PackageReference Include="BepInEx.AssemblyPublicizer.MSBuild" Version="0.4.3" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers"/>
         <PackageReference Include="BepInEx.PluginInfoProps" Version="2.*"/>
     </ItemGroup>
 
     <ItemGroup>
-        <Reference Include="Assembly-CSharp">
+        <Reference Include="Assembly-CSharp" Publicize="True">
             <HintPath>..\lib\Assembly-CSharp.dll</HintPath>
         </Reference>
 

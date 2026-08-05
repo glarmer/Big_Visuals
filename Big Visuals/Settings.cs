@@ -68,11 +68,24 @@ public class Settings
 
     public void SetPostProcessAA()
     {
-        if (Camera.main.TryGetComponent(out UniversalAdditionalCameraData data))
+        ApplyPostProcessAA(Camera.main, "main camera");
+    }
+
+    public void SetPostProcessAA(PlayerCameraMinder cameraMinder)
+    {
+        Camera camera = null;
+
+        if (cameraMinder != null &&
+            cameraMinder.playerCameraReferences != null &&
+            cameraMinder.playerCameraReferences.playerCamera != null)
         {
-            data.antialiasing = (AntialiasingMode)Plugin.Instance.ConfigurationHandler.CameraAA;
+            camera = cameraMinder.playerCameraReferences.playerCamera;
         }
-        Plugin.Log.LogInfo("Camera AA applied: " + _configurationHandler.CameraAA);
+
+        if (camera == null)
+            camera = Camera.main;
+
+        ApplyPostProcessAA(camera, "player camera");
     }
 
     // public void SetMSAA()
@@ -195,5 +208,24 @@ public class Settings
         if (cascadeCount <= 2)
             return ShadowCascadesOption.TwoCascades;
         return ShadowCascadesOption.FourCascades;
+    }
+
+    private void ApplyPostProcessAA(Camera camera, string sourceName)
+    {
+        if (camera == null)
+        {
+            Plugin.Log.LogWarning($"Camera AA not applied as {sourceName} was not available");
+            return;
+        }
+
+        UniversalAdditionalCameraData data = camera.GetComponent<UniversalAdditionalCameraData>();
+        if (data == null)
+        {
+            Plugin.Log.LogWarning($"Camera AA not applied as {sourceName} has no UniversalAdditionalCameraData");
+            return;
+        }
+
+        data.antialiasing = (AntialiasingMode)Plugin.Instance.ConfigurationHandler.CameraAA;
+        Plugin.Log.LogInfo("Camera AA applied " + _configurationHandler.CameraAA);
     }
 }
