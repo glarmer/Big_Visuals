@@ -84,7 +84,7 @@ public class ConfigurationHandler
             4,
             "Controls the number of shadow cascades used by the directional light. PEAK's High option equates to 2. Higher values improve shadow stability. Range 1-10",
             () => Plugin.Instance.Settings.SetShadowCascades(),
-            v => Mathf.Clamp(v, 1, 4)
+            ClampShadowCascades
         );
 
         ConfigShadowmapResolution = Bind(
@@ -93,7 +93,7 @@ public class ConfigurationHandler
             4096,
             "Controls the quality of the shadows, can reduce performance so turn it down if you're having issues. Makes the trees less wobbly",
             () => Plugin.Instance.Settings.SetShadowmapResolution(),
-            v => Mathf.Clamp(v, 1024, 20480)
+            ClampShadowmapResolution
         );
 
         ConfigSoftShadows = Bind(
@@ -127,7 +127,7 @@ public class ConfigurationHandler
             8,
             "Controls whether Multi-Sample Anti-Aliasing (MSAA) is enabled. MSAA smooths jagged edges on geometry by sampling pixels multiple times. It is generally sharper than post-process AA methods but only affects object edges and can slightly reduce performance. PEAK does not use it by default. Higher values = better quality but worse performance. Valid values = 0, 2, 4, 8.",
             () => Plugin.Instance.Settings.SetMSAA(),
-            v => Mathf.Clamp(v, 0, 8)
+            ClampMsaa
         );
 
         ConfigFOV = Bind(
@@ -165,6 +165,37 @@ public class ConfigurationHandler
             AddSettingChangedHandler(entry, onChanged, clamp);
 
         return entry;
+    }
+
+    private static int ClampMsaa(int value)
+    {
+        if (value <= 0)
+            return 0;
+        if (value <= 2)
+            return 2;
+        if (value <= 4)
+            return 4;
+        return 8;
+    }
+
+    private static int ClampShadowCascades(int value)
+    {
+        if (value <= 1)
+            return 1;
+        if (value <= 2)
+            return 2;
+        return 4;
+    }
+
+    private static int ClampShadowmapResolution(int value)
+    {
+        if (value <= 1024)
+            return 1024;
+        if (value <= 2048)
+            return 2048;
+        if (value <= 4096)
+            return 4096;
+        return 8192;
     }
 
     private static void AddSettingChangedHandler<T>(ConfigEntry<T> entry, Action onChanged, Func<T, T> clamp)
