@@ -57,7 +57,7 @@ public class ConfigurationHandler
             1,
             "Controls what filter the game uses to scale to your monitor resolution. 0 = auto, 1 = linear, 2 = point, 3 = FSR 1.0",
             () => Plugin.Instance.Settings.SetUpscaler(),
-            v => Mathf.Clamp(v, 0, 4)
+            v => Mathf.Clamp(v, 0, 3)
         );
 
         ConfigLODQuality = Bind(
